@@ -1,11 +1,15 @@
 <script lang="ts">
 	import { config } from '$lib/neat';
 	import { sleep } from '$lib/utils';
-	import { type Genome, Population } from 'neat-javascript';
+	import VisualGenome from '$lib/VisualGenome.svelte';
+	import VisualSpecies from '$lib/VisualSpecies.svelte';
+	import { type Genome, Population, Species } from 'neat-javascript';
+
+	let population: Population = new Population(config);
 
 	let bestGenome: Genome | null = $state(null);
-	let population: Population = new Population(config);
 	let generation = $state(0);
+	let species: Species[] = $state([]);
 
 	function testGenome(genome: Genome) {
 		// Test the genome with some inputs
@@ -36,20 +40,19 @@
 
 	async function run() {
 		// For each generation
-		for (generation = 0; generation < config.generations; generation++) {
+		for (let i = 0; i < config.generations; i++) {
 			// Manually evaluate each genome
 			population.genomes.forEach((genome: any) => {
 				const res = testGenome(genome);
 				genome.fitness = res;
 			});
 
-			console.log(population.genomes[0].propagate([0, 1]));
-
 			await sleep(100);
 
 			// Track progress
 			bestGenome = population.getBestGenome();
-			console.log(`Generation ${generation}: Best fitness = ${bestGenome.fitness}`);
+			species = population.species;
+			generation = population.generation;
 
 			// Evolve to the next generation
 			population.evolve();
@@ -58,7 +61,34 @@
 </script>
 
 <button onclick={run}> Run NEAT </button>
+<h1 class="text-xl">
+	Generation {generation}; Fitness = {bestGenome?.fitness}
+</h1>
+
+<VisualSpecies {species} />
+
 {#if bestGenome}
 	<h1>Best Genome</h1>
-	<pre>Generation {generation}: Best fitness = {bestGenome.fitness}</pre>
+	<VisualGenome genome={bestGenome} />
 {/if}
+
+<style>
+	button {
+		font-family: monospace;
+		border: 1px solid #ccc;
+		border-radius: 0.5rem;
+		padding: 1rem;
+		background-color: #f0f0f0;
+		cursor: pointer;
+	}
+
+	h1 {
+		margin-top: 2rem;
+	}
+
+	.species {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 1rem;
+	}
+</style>

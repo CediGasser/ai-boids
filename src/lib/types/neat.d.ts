@@ -42,15 +42,74 @@ declare module 'neat-javascript' {
 		generations: number;
 	}
 
+	export class Species {
+		bestFitness: number;
+		config: Config;
+		generationsSinceImprovement: number;
+		genomes: Genome[];
+		id: number;
+		offspringCount: number;
+		stagnated: boolean;
+	}
+
 	export class Population {
 		constructor(config: Config);
 		genomes: Genome[];
-		getBestGenome(): Genome;
+		species: Species[];
+		populationId: number | string;
+		generation: number;
+		config: Config;
 		evolve(): void;
+		evaluatePopulation(): void;
+		speciate(): void;
+		getBestGenome(): Genome;
 	}
 
+	export class Node {
+		id: number;
+		nodeType: 'INPUT' | 'OUTPUT' | 'HIDDEN' | 'BIAS';
+		expectedInputs: number;
+	}
+
+	export class Connection {
+		id: number;
+		enables: boolean;
+		forwardExpectedInput: boolean;
+		inNode: Node;
+		outNode: Node;
+		weight: number;
+		recurrent: boolean;
+		innovationNumber: number;
+	}
+
+	// good
 	export class Genome {
+		constructor(
+			nodeGenes: Node[],
+			connectionGenes: Connection[],
+			config: any,
+			populationId: number | string
+		);
+		id: number;
+		nodeGenes: Node[];
+		connectionGenes: Connection[];
+		inputNodes: Node[];
+		outputNodes: Node[];
+		biasNode: Node;
 		fitness: number;
+		populationId: number;
 		propagate(input: mumber[]): number[];
+		resetState(): void;
+		mutate(): void;
+		mutateWeights(): void;
+		mutateAddConnection(): void;
+		mutateAddNode(): void;
+		reinitializeWeights(): void;
+		copy(): Genome;
+		equalsGenome(other: Genome): boolean;
+		crossover(other: Genome): Genome;
+		evaluateFitness(): void;
+		toJSON(): string;
+		prune(): void;
 	}
 }
