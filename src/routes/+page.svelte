@@ -47,7 +47,7 @@
 				genome.fitness = res;
 			});
 
-			await sleep(100);
+			await sleep(10);
 
 			// Track progress
 			bestGenome = population.getBestGenome();
@@ -84,11 +84,5 @@
 
 	h1 {
 		margin-top: 2rem;
-	}
-
-	.species {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 1rem;
 	}
 </style>

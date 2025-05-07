@@ -30,7 +30,7 @@ export const config = new Config({
 	interspeciesMatingRate: 0.001, // Rate of interspecies mating
 
 	// Mutation parameters
-	mutationRate: 1.0, // Overall mutation rate
+	mutationRate: 4.0, // Overall mutation rate
 	weightMutationRate: 0.8, // Mutation rate for weights
 	addConnectionMutationRate: 0.05, // Rate for adding new connections
 	addNodeMutationRate: 0.03, // Rate for adding new nodes
