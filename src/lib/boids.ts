@@ -1,18 +1,33 @@
 import p5 from 'p5';
 
-const PERCEPTION_RADIUS = 50;
 const MAX_SPEED = 4;
+
+const SEPARATION_FACTOR = 1.2; // Factor to control the strength of separation behavior
+const ALIGNMENT_FACTOR = 0.2; // Factor to control the strength of alignment behavior
+const COHESION_FACTOR = 1.2; // Factor to control the strength of cohesion behavior
+
+const AGILITY = 0.1; // Factor to control the agility of the boids
+const IGNORE_OTHER_SPECIES = true; // If true, boids will ignore other species
 
 export class Boid {
 	private p: p5;
-	public position: p5.Vector;
 	private velocity: p5.Vector;
 	private perceptionRadius: number;
 
-	constructor(p: p5, position: p5.Vector, perceptionRadius: number, initVelocity?: p5.Vector) {
+	public species: p5.Color;
+	public position: p5.Vector;
+
+	constructor(
+		p: p5,
+		position: p5.Vector,
+		perceptionRadius: number,
+		color: p5.Color,
+		initVelocity?: p5.Vector
+	) {
 		this.p = p;
 		this.position = position;
 		this.perceptionRadius = perceptionRadius;
+		this.species = color;
 
 		this.velocity =
 			initVelocity ||
@@ -23,7 +38,7 @@ export class Boid {
 
 	// Draws a triangle at the boid's position
 	public draw() {
-		this.p.fill(0);
+		this.p.fill(this.species);
 		this.p.noStroke();
 		this.p.push();
 		this.p.translate(this.position.x, this.position.y);
@@ -40,15 +55,15 @@ export class Boid {
 		let total = 0;
 
 		for (let other of boids) {
-			if (other !== this) {
-				let distance = this.wrappedDistanceTo(other);
-				if (distance < this.perceptionRadius) {
-					alignment.add(other.velocity);
-					cohesion.add(other.position);
-					separation.add(p5.Vector.sub(this.position, other.position).div(distance));
-					total++;
-				}
-			}
+			if (IGNORE_OTHER_SPECIES && other.species !== this.species) continue;
+			if (other === this) continue;
+			let distance = this.wrappedDistanceTo(other);
+			if (distance > this.perceptionRadius) continue;
+
+			alignment.add(other.velocity);
+			cohesion.add(other.position);
+			separation.add(p5.Vector.sub(this.position, other.position).div(distance));
+			total++;
 		}
 
 		if (total > 0) {
@@ -64,11 +79,13 @@ export class Boid {
 
 	public calculateMovement(alignment: p5.Vector, cohesion: p5.Vector, separation: p5.Vector) {
 		let steering = this.p.createVector(0, 0);
-		steering.add(alignment);
-		steering.add(cohesion);
-		steering.add(separation);
-		steering.limit(MAX_SPEED / 4); // Limit the steering force to avoid sudden changes in speed
-		steering.limit(0.1); // Limit the steering force to avoid sudden changes in direction
+		steering.add(alignment.mult(ALIGNMENT_FACTOR)); // Invert alignment to steer towards neighbors
+		steering.add(cohesion.mult(COHESION_FACTOR)); // Invert cohesion to steer towards neighbors
+		steering.add(separation.mult(SEPARATION_FACTOR)); // Invert separation to steer away from neighbors
+
+		steering.mult(AGILITY); // Limit the steering force to avoid sudden changes in direction
+		steering.limit(1); // Limit the steering force to avoid sudden changes in direction
+
 		return steering;
 	}
 
