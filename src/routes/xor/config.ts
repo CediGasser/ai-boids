@@ -42,7 +42,7 @@ export const config = new Config({
 
 	// Evolution parameters
 	populationSize: 150, // Size of the population
-	generations: 100, // Number of generations
+	generations: 1000, // Number of generations
 	targetFitness: 0.95, // Target fitness to achieve
 	survivalRate: 0.2, // Proportion that survives each generation
 	numOfElite: 10, // Number of elite individuals to retain

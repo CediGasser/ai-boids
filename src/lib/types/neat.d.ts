@@ -40,6 +40,7 @@ declare module 'neat-javascript' {
 	export class Config {
 		constructor(options: ConfigOptions);
 		generations: number;
+		targetFitness: number;
 	}
 
 	export class Species {
