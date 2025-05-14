@@ -9,7 +9,7 @@
 
 	const boids: AiBoid[] = [];
 	const PERCEPTION_RADIUS = 50;
-	const DANGER_RADIUS = 100;
+	const DANGER_RADIUS = 300;
 	const POPULATION_LIFETIME = 300; // 10 seconds
 
 	const population = new Population(config);
@@ -53,7 +53,8 @@
 			);
 
 			boids.forEach((boid) => {
-				const difference = p5.Vector.sub(mouse, boid.position)
+				const difference = boid
+					.wrappedVectorTo(mouse)
 					.limit(DANGER_RADIUS * 2)
 					.div(DANGER_RADIUS);
 				boid.update(boids, difference);

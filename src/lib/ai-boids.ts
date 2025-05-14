@@ -65,7 +65,7 @@ export class AiBoid {
 		for (let other of boids) {
 			if (IGNORE_OTHER_SPECIES && other.species !== this.species) continue;
 			if (other === this) continue;
-			let distance = this.wrappedDistanceTo(other);
+			let distance = this.wrappedVectorTo(other.position).mag();
 			if (distance > this.perceptionRadius) continue;
 
 			alignment.add(other.velocity);
@@ -109,9 +109,9 @@ export class AiBoid {
 
 		const fitness =
 			1 -
-			angleDifference * 0.2 - // Weight for steering difference
-			magnitudeDifference * 0.2 - // Weight for magnitude difference
-			avoidanceMagnitude * 0.6; // Weight for avoidance magnitude
+			angleDifference * 0.1 - // Weight for steering difference
+			magnitudeDifference * 0.1 - // Weight for magnitude difference
+			avoidanceMagnitude * 0.8; // Weight for avoidance magnitude
 
 		// console.log(
 		//	`Fitenss: ${fitness} (Angle: ${angleDifference}, Magnitude: ${magnitudeDifference}, Avoidance: ${avoidanceMagnitude})`
@@ -174,13 +174,18 @@ export class AiBoid {
 	}
 
 	// Calculate the distance to another boid, considering wrapping around the edges
-	private wrappedDistanceTo(other: AiBoid) {
-		const dx = Math.abs(this.position.x - other.position.x);
-		const dy = Math.abs(this.position.y - other.position.y);
+	public wrappedVectorTo(other: p5.Vector): p5.Vector {
+		let dx = this.position.x - other.x;
+		let dy = this.position.y - other.y;
 
-		const wrappedDx = Math.min(dx, this.p.width - dx);
-		const wrappedDy = Math.min(dy, this.p.height - dy);
+		// Check if the distance is greater than half the width or height
+		if (Math.abs(dx) > this.p.width / 2) {
+			dx = dx + this.p.width * Math.sign(dx);
+		}
+		if (Math.abs(dy) > this.p.height / 2) {
+			dy = dy + this.p.height * Math.sign(dy);
+		}
 
-		return Math.sqrt(wrappedDx ** 2 + wrappedDy ** 2);
+		return new p5.Vector(dx, dy);
 	}
 }
