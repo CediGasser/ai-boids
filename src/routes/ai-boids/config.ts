@@ -6,7 +6,7 @@ export const config = new Config({
 	outputSize: 2, // Number of output nodes
 
 	// Activation function (string-based selection)
-	activationFunction: 'Sigmoid', // Options: 'Sigmoid', 'NEATSigmoid', 'Tanh', 'ReLU', 'LeakyReLU', 'Gaussian'
+	activationFunction: 'Tanh', // Options: 'Sigmoid', 'NEATSigmoid', 'Tanh', 'ReLU', 'LeakyReLU', 'Gaussian'
 
 	// Bias settings
 	bias: 0.0, // Bias value
@@ -43,7 +43,7 @@ export const config = new Config({
 	// Evolution parameters
 	populationSize: 150, // Size of the population
 	generations: 1000, // Number of generations
-	targetFitness: 0.95, // Target fitness to achieve
+	targetFitness: 0.99, // Target fitness to achieve
 	survivalRate: 0.2, // Proportion that survives each generation
 	numOfElite: 10, // Number of elite individuals to retain
 	dropOffAge: 15, // Maximum age before dropping off

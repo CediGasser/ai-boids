@@ -127,17 +127,17 @@ export class AiBoid {
 		avoidance: p5.Vector // Avoidance vector for obstacles
 	): p5.Vector {
 		const [x, y] = this.genome.propagate([
-			alignment.x / 2 + 0.5,
-			alignment.y / 2 + 0.5,
-			cohesion.x / 2 + 0.5,
-			cohesion.y / 2 + 0.5,
-			separation.x / 2 + 0.5,
-			separation.y / 2 + 0.5,
-			avoidance.x / 2 + 0.5,
-			avoidance.y / 2 + 0.5
+			alignment.x,
+			alignment.y,
+			cohesion.x,
+			cohesion.y,
+			separation.x,
+			separation.y,
+			avoidance.x,
+			avoidance.y
 		]);
 
-		const steering = new p5.Vector(2 * x - 1, 2 * y - 1); // Scale to [-1, 1]
+		const steering = new p5.Vector(x, y);
 		steering.mult(AGILITY); // multiply by agility factor
 		steering.limit(1); // Limit the steering force to avoid sudden changes in direction
 

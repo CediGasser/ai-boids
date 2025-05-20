@@ -9,7 +9,7 @@
 
 	const boids: AiBoid[] = [];
 	const PERCEPTION_RADIUS = 50;
-	const DANGER_RADIUS = 300;
+	const DANGER_RADIUS = 200;
 	const POPULATION_LIFETIME = 300; // 10 seconds
 
 	const population = new Population(config);
