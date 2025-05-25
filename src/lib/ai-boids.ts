@@ -105,7 +105,7 @@ export class AiBoid {
 		const mag = normalSteering.mag() * aiSteering.mag();
 		const angleDifference = Math.abs(dot / (mag + 0.0001)); // Avoid division by zero
 		const magnitudeDifference = Math.abs(normalSteering.mag() - aiSteering.mag());
-		const avoidanceMagnitude = 1 - Math.min(avoidance.mag() / 2, 1); // Invert the magnitude for fitness calculation
+		const avoidanceMagnitude = Math.max(0, Math.min(1, -avoidance.mag() + 2)); // Invert the magnitude for fitness calculation
 
 		const fitness =
 			1 -

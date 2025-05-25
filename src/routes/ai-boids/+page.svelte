@@ -9,7 +9,7 @@
 
 	const boids: AiBoid[] = [];
 	const PERCEPTION_RADIUS = 50;
-	const DANGER_RADIUS = 200;
+	const DANGER_RADIUS = 150;
 	const POPULATION_LIFETIME = 300; // 10 seconds
 
 	const population = new Population(config);
@@ -35,37 +35,39 @@
 
 		p.draw = () => {
 			p.background(222);
-			const mouse = new p5.Vector(p.mouseX, p.mouseY);
+			const dangerZone = new p5.Vector(p.width / 2, p.height / 2);
 
 			// Draw the danger zone
 			p.noFill();
 			p.stroke(255, 0, 0);
 			p.strokeWeight(2);
-			p.circle(mouse.x, mouse.y, DANGER_RADIUS * 2);
+			p.circle(dangerZone.x, dangerZone.y, DANGER_RADIUS * 2);
 
 			// Draw the time left as circle getting smaller
 			p.strokeWeight(1);
 			p.circle(
-				mouse.x,
-				mouse.y,
+				dangerZone.x,
+				dangerZone.y,
 				2 * DANGER_RADIUS -
 					(p.frameCount % POPULATION_LIFETIME) * ((2 * DANGER_RADIUS) / POPULATION_LIFETIME)
 			);
 
+			// Update the boids
 			boids.forEach((boid) => {
-				const difference = boid
-					.wrappedVectorTo(mouse)
+				const distance = boid
+					.wrappedVectorTo(dangerZone)
 					.limit(DANGER_RADIUS * 2)
 					.div(DANGER_RADIUS);
-				boid.update(boids, difference);
+				boid.update(boids, distance);
 			});
 
+			// Draw the boids
 			boids.forEach((boid) => {
 				boid.draw();
 			});
 
 			// Evaluate the fitness of each genome
-			// and Evolve the population every 1000 frames
+			// and Evolve the population after a certain number of frames
 			if (p.frameCount % POPULATION_LIFETIME === 0) {
 				// Update stats
 				bestGenome = population.getBestGenome();
