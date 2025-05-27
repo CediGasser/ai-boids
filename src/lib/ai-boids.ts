@@ -113,11 +113,7 @@ export class AiBoid {
 			magnitudeDifference * 0.1 - // Weight for magnitude difference
 			avoidanceMagnitude * 0.8; // Weight for avoidance magnitude
 
-		// console.log(
-		//	`Fitenss: ${fitness} (Angle: ${angleDifference}, Magnitude: ${magnitudeDifference}, Avoidance: ${avoidanceMagnitude})`
-		// );
-
-		return fitness; // Invert the fitness value to make it higher for better performance
+		return fitness;
 	}
 
 	private AICalculateMovement(

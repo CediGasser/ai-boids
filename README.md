@@ -79,3 +79,11 @@ The total fitness of a boid is the average of the fitness over its lifetime, whi
 - **Visualization**: Enhancing visualizations of the neural network, fitness evolution, and NEAT process.
 - **Parameter tuning**: Experimenting with different NEAT parameters to optimize learning.
 - **Environment improvements**: Improving wrapping and boundary conditions to better simulate real-world scenarios.
+
+# Start the project
+
+To run the project, you'll need node and npm installed. Then, follow these steps:
+
+- `npm install` to install dependencies
+- `npm run dev` to start the dev server
+- Open your browser and navigate to `http://localhost:5173`
